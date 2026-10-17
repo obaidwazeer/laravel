@@ -1,0 +1,40 @@
+name: Laravel CICD Pipeline
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: 
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+       # checkout the code on the above runner
+       - name: checkout code
+         uses: actions/checkout@v4
+
+        # install php
+       - name: install php
+         uses: shivammathur/setup-php@v2
+         with:
+           php-version: "8.5"
+           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+           composer: v2
+
+       # install composer
+       - name: install composer
+         run: composer install
+
+       # run the migration
+       - name: run migration
+         run: php artisan migrate
+
+       # clear the cache
+       - name: clear cache
+         run: |
+           php artisan config:cache
+           php artisan cache:clear
+
+       
