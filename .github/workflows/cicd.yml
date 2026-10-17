@@ -37,6 +37,20 @@ jobs:
        - name: create application key
          run: php artisan key:generate
 
+       # set up the node environment
+       - name: node environment
+         uses: actions/setup-node@v4
+         with:
+           node-version: "24"
+
+       # install npm
+       - name: install npm dependencies
+         run: npm ci
+
+       # build the application
+       - name: build the application
+         run: npm run build
+
        # run the migration
        - name: run migration
          env:
@@ -49,5 +63,6 @@ jobs:
          run: |
            php artisan config:cache
            php artisan cache:clear
+         
 
        
