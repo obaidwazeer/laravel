@@ -45,7 +45,7 @@ jobs:
 
        # install npm
        - name: install npm dependencies
-         run: npm ci
+         run: npm install
 
        # build the application
        - name: build the application
