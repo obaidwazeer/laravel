@@ -23,13 +23,26 @@ jobs:
            extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
            composer: v2
 
+       # prepare environment
+       - name: prepare environment
+         run: |
+           cp .env.example .env
+           touch mkdir database/database.sqlite
+
        # install composer
        - name: install composer
-         run: composer install
+         run: composer install --no-ansi --no-interaction --no-scripts --prefer-dist
+
+       # create an application key
+       - name: create application key
+         run: php artisan key:generate
 
        # run the migration
        - name: run migration
-         run: php artisan migrate
+         env:
+           DB_CONNECTION: sqlite
+           DB_DATABASE: database/database.sqlite
+         run: php artisan migrate --force
 
        # clear the cache
        - name: clear cache
